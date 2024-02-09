@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function(){
   searchForm.addEventListener('submit', async (event) => {
       event.preventDefault();
       currentSearchTerm = searchInput.value.trim();
-      currentPage = 1; 
+      currentPage = 1; // Reset page number when submitting new search term
       if (currentSearchTerm) {
         showLoadingIndicator();
         await searchImages(currentSearchTerm, currentPage);
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function(){
           clearImages();
         }
         displayImages(data.hits);
-        loadMoreButton.style.display = totalHits > imageContainer.children.length ? 'block' : 'none'; 
+        loadMoreButton.style.display = totalHits > imageContainer.children.length ? 'block' : 'none'; // Show load more button only if there are more images to load
       } else {
         if (page === 1) {
           clearImages();
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function(){
         }
         loadMoreButton.style.display = 'none';
       }
-     
+      // Прокрутка сторінки після завантаження кожної наступної групи зображень
       smoothScrollToNextGroup();
     } catch(error) {
       iziToast.error({
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function(){
   const lightbox = new SimpleLightbox('.card-link');
   function displayImages(images) {
     const html = images.map(image => generateImageCard(image)).join('');
-    imageContainer.innerHTML += html;
+    imageContainer.innerHTML += html; // Append new images to the existing ones
     lightbox.refresh();
   }
 
@@ -127,10 +127,10 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 
   function smoothScrollToNextGroup() {
-    
+    // Отримуємо висоту однієї карточки галереї
     const cardHeight = document.querySelector('.image-card').getBoundingClientRect().height;
 
-    
+    // Прокручуємо сторінку на дві висоти карточки галереї з плавною анімацією
     window.scrollBy({
         top: cardHeight * 2,
         behavior: 'smooth'
