@@ -106,4 +106,6 @@ function generateImageCard(image) {
 function clearImages() {
   imageContainer.innerHTML = '';
 }
-});
+}); 
+
+fun
