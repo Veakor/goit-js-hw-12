@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
   loadMoreButton.id = 'loadMoreButton';
   loadMoreButton.textContent = 'Load more';
-  loadMoreButton.style.display = 'none'; /
+  loadMoreButton.style.display = 'none'; 
   
  
   loadMoreButton.addEventListener('click', async () => {
