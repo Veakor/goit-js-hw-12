@@ -5,14 +5,16 @@
   |============================
 */
 @import url('./reset.css');
-@import url('./vite-promo.css');
 @import url('./header.css');
 
 :root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 400;
+  font-family: Arial, sans-serif;
+  font-size: 10px;
+            display: flex;
+  flex-wrap: wrap;
+            justify-content: center;
+          
+ 
 
   color: #242424;
   background-color: rgba(255, 255, 255, 0.87);
@@ -22,4 +24,38 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+}
+.image-card {
+  border: 1px solid #ddd;
+  margin: 10px;
+  display: inline-block;
+  vertical-align: top;
+  width: calc(30%); 
+  box-sizing: border-box;
+}
+.card-image {
+width: 100%;
+height: auto;
+}
+
+.card-details {
+display: inline-flex;
+ margin-top: 5px;
+flex-wrap: nowrap;
+  align-items: center;
+}
+div{
+flex-wrap: wrap;
+align-items: center;
+}
+
+.large-image {
+width: 100%;
+height: auto;
+
+}
+.card-text {
+
+white-space: nowrap;
+
 }

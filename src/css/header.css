@@ -19,3 +19,14 @@
 .nav-link:focus {
   color: #747bff;
 }
+.panel{
+  justify-content: center;
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+button{
+  margin-left: 10px;
+}
