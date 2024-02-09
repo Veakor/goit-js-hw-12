@@ -2,6 +2,7 @@ import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 import SimpleLightbox from 'simplelightbox';
 import 'npm install simplelightbox /dist/simple-lightbox.min.css';
+import axios from 'axios';
 
 document.addEventListener('DOMContentLoaded', function(){
 const apiKey = '42207002-bb01baf83cbb3b924a651843b';
