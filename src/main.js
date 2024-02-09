@@ -10,7 +10,10 @@ const searchInput = document.getElementById('searchInput');
 const searchButton = document.getElementById('searchButton');
 const imageContainer = document.getElementById('imageContainer');
 const loadingIndicator = document.getElementById('loadingIndicator');
-const searchForm = document.getElementById('searchForm'); 
+const searchForm = document.getElementById('searchForm');
+
+let currentPage = 1;
+let currentSearchTerm = '';
 
 if (!searchForm || !searchInput || !searchButton || !imageContainer || !loadingIndicator) {
     console.error('One or more elements not found.');
@@ -20,8 +23,9 @@ if (!searchForm || !searchInput || !searchButton || !imageContainer || !loadingI
 searchForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const searchTerm = searchInput.value.trim();
+    currentPage =1;
   
-  if (searchTerm) {
+  if (currentSearchTerm) {
     showLoadingIndicator();
     await searchImages(searchTerm);
   } else {
@@ -32,38 +36,52 @@ searchForm.addEventListener('submit', async (event) => {
   }
 });
 
-function showLoadingIndicator() {
-    loadingIndicator.style.display = 'block';
-  }
-  
-function hideLoadingIndicator() {
-    if(loadingIndicator && loadingIndicator.style.display !== 'none'){
-    loadingIndicator.style.display = 'none';
-  }
-}
-
-async function searchImages(query) {
+loadMoreButton.addEventListener('click', async () => {
+    currentPage++;
     showLoadingIndicator();
+    await searchImages(currentSearchTerm, currentPage);
+  });
 
-  const url = `https://pixabay.com/api/?key=${apiKey}&q=${encodeURIComponent(query)}&image_type=photo&orientation=horizontal&safesearch=true`;
+  function showLoadingIndicator() {
+      loadingIndicator.style.display = 'block';
+    }
+    
+  function hideLoadingIndicator() {
+      if(loadingIndicator && loadingIndicator.style.display !== 'none'){
+      loadingIndicator.style.display = 'none';
+    }
+  }
+
+  async function searchImages(query, page) {
+    const perPage = 15;
+    const url = `https://pixabay.com/api/?key=${apiKey}&q=${encodeURIComponent(query)}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=${perPage}`;
 
   try {
     const response = await axios.get(url);
     const data = response.data;
-  
-
-      if (data.hits && data.hits.length > 0) {
-
+   if (data.hits && data.hits.length > 0) {
+    if (page === 1) {
         clearImages();
-        displayImages(data.hits);
-      } else {
+      }
+      displayImages(data.hits);
+      loadMoreButton.style.display = 'block'; // Show load more button if there are more images to load
+    } else {
+      if (page === 1) {
+        clearImages();
         iziToast.info({
           title: 'Info',
           message: 'Sorry, there are no images matching your search query. Please try again.',
         });
 
-        clearImages();
+    } else {
+        iziToast.info({
+          title: 'Info',
+          message: 'No more images to load.',
+        });
       }
+      loadMoreButton.style.display = 'none';
+      }
+      
     } catch(error) {
       iziToast.error({
         title: 'Error',
@@ -79,7 +97,7 @@ async function searchImages(query) {
 const lightbox = new SimpleLightbox('.card-link');
 function displayImages(images) {
   const html = images.map(image => generateImageCard(image)).join('');
-  imageContainer.innerHTML = html;
+  imageContainer.innerHTML += html;
   lightbox.refresh();
 }
 
