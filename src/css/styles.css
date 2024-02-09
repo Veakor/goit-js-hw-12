@@ -59,17 +59,3 @@ height: auto;
 white-space: nowrap;
 
 }
-#loadMoreButton {
-  display: block;
-  margin: 20px auto;
-  background-color: blue;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-#loadMoreButton:hover {
-  background-color: darkblue;
-}

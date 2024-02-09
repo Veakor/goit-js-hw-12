@@ -84,6 +84,20 @@ document.addEventListener('DOMContentLoaded', function(){
         }
         loadMoreButton.style.display = 'none';
       }
+      loadMoreButton.id = 'loadMoreButton';
+  loadMoreButton.textContent = 'Load more';
+  loadMoreButton.style.display = 'none'; 
+  
+ 
+  loadMoreButton.addEventListener('click', async () => {
+    currentPage++;
+    showLoadingIndicator();
+    await searchImages(currentSearchTerm, currentPage);
+  });
+  
+  
+  imageContainer.insertAdjacentElement('afterend', loadMoreButton);
+
       
       smoothScrollToNextGroup();
     } catch(error) {
@@ -121,25 +135,6 @@ document.addEventListener('DOMContentLoaded', function(){
       </div>
     `;
   }
-
-
-  loadMoreButton.id = 'loadMoreButton';
-  loadMoreButton.textContent = 'Load more';
-  loadMoreButton.style.display = 'none'; 
-  
- 
-  loadMoreButton.addEventListener('click', async () => {
-    currentPage++;
-    showLoadingIndicator();
-    await searchImages(currentSearchTerm, currentPage);
-  });
-  
-  
-  imageContainer.insertAdjacentElement('afterend', loadMoreButton);
-
-
-
-
 
 
   function clearImages() {
