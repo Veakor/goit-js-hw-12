@@ -17,13 +17,13 @@ if (!searchForm || !searchInput || !searchButton || !imageContainer || !loadingI
     return;
   }
 
-searchForm.addEventListener('submit', (event) => {
+searchForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const searchTerm = searchInput.value.trim();
   
   if (searchTerm) {
     showLoadingIndicator();
-    searchImages(searchTerm);
+    await searchImages(searchTerm);
   } else {
     iziToast.error({
       title: 'Error',
@@ -42,14 +42,15 @@ function hideLoadingIndicator() {
   }
 }
 
-function searchImages(query) {
+async function searchImages(query) {
     showLoadingIndicator();
 
   const url = `https://pixabay.com/api/?key=${apiKey}&q=${encodeURIComponent(query)}&image_type=photo&orientation=horizontal&safesearch=true`;
 
-  fetch(url)
-    .then(response => response.json())
-    .then(data => {
+  try {
+    const response = await axios.get(url);
+    const data = response.data;
+  
 
       if (data.hits && data.hits.length > 0) {
 
@@ -63,19 +64,16 @@ function searchImages(query) {
 
         clearImages();
       }
-    })
-    .catch(error => {
+    } catch(error) {
       iziToast.error({
         title: 'Error',
         message: 'An error occurred while fetching images. Please try again.',
       });
       console.error(error);
-    })
-
-    .finally(() => {
+    }finally {
 
         hideLoadingIndicator();
-      });
+      }
 }
 
 const lightbox = new SimpleLightbox('.card-link');
