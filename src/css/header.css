@@ -39,6 +39,8 @@ button{
   padding: 10px 20px;
   cursor: pointer;
   border-radius: 5px;
+  width: 120px;
+  height:40px;
 }
 
 #loadMoreButton:hover {

@@ -10,31 +10,48 @@ document.addEventListener('DOMContentLoaded', function(){
   const searchButton = document.getElementById('searchButton');
   const imageContainer = document.getElementById('imageContainer');
   const loadingIndicator = document.getElementById('loadingIndicator');
+  const loadMoreButton = document.getElementById('loadMoreButton');
   const searchForm = document.getElementById('searchForm'); 
 
-  if (!searchForm || !searchInput || !searchButton || !imageContainer || !loadingIndicator) {
-      console.error('One or more elements not found.');
-      return;
-  }
+  let currentPage = 1;
+  let currentSearchTerm = '';
+
+  
+  
 
   searchForm.addEventListener('submit', async (event) => {
       event.preventDefault();
       const searchTerm = searchInput.value.trim();
     
       if (searchTerm) {
+          currentSearchTerm = searchTerm; 
+          currentPage = 1; 
           showLoadingIndicator();
           try {
-              await searchImages(searchTerm);
+              await searchImages(currentSearchTerm, currentPage);
           } catch (error) {
               console.error('Error occurred during search:', error);
           } finally {
               hideLoadingIndicator();
+              loadMoreButton.style.display = 'block'; 
           }
       } else {
           iziToast.error({
               title: 'Error',
               message: 'Please enter a search term.',
           });
+      }
+  });
+
+  loadMoreButton.addEventListener('click', async () => {
+      currentPage++; 
+      showLoadingIndicator();
+      try {
+          await searchImages(currentSearchTerm, currentPage);
+      } catch (error) {
+          console.error('Error occurred during search:', error);
+      } finally {
+          hideLoadingIndicator();
       }
   });
 
@@ -48,22 +65,24 @@ document.addEventListener('DOMContentLoaded', function(){
       }
   }
 
-  async function searchImages(query) {
-      const url = `https://pixabay.com/api/?key=${apiKey}&q=${encodeURIComponent(query)}&image_type=photo&orientation=horizontal&safesearch=true`;
+  async function searchImages(query, page) {
+      const url = `https://pixabay.com/api/?key=${apiKey}&q=${encodeURIComponent(query)}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=15`; // Додати параметри сторінки та кількості елементів на сторінці
 
       try {
           const response = await axios.get(url);
           const data = response.data;
 
           if (data.hits && data.hits.length > 0) {
-              clearImages();
               displayImages(data.hits);
           } else {
-              iziToast.info({
-                  title: 'Info',
-                  message: 'Sorry, there are no images matching your search query. Please try again.',
-              });
-              clearImages();
+              if (page === 1) { 
+                  iziToast.info({
+                      title: 'Info',
+                      message: 'Sorry, there are no images matching your search query. Please try again.',
+                  });
+              } else { 
+                  loadMoreButton.style.display = 'none';
+              }
           }
       } catch (error) {
           throw new Error('An error occurred while fetching images. Please try again.');
@@ -73,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function(){
   const lightbox = new SimpleLightbox('.card-link');
   function displayImages(images) {
       const html = images.map(image => generateImageCard(image)).join('');
-      imageContainer.innerHTML = html;
+      imageContainer.innerHTML += html; 
       lightbox.refresh();
   }
 
@@ -93,9 +112,5 @@ document.addEventListener('DOMContentLoaded', function(){
               </div>
           </div>
       `;
-  }
-
-  function clearImages() {
-      imageContainer.innerHTML = '';
   }
 });
