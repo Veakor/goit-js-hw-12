@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function(){
         }
         displayImages(data.hits);
 
-        loadMoreButton.style.display =currentPage * perPage < totalHits ? 'block' : 'none'; 
+        loadMoreButton.style.display = currentPage * perPage >= totalHits ? 'block' : 'none'; 
       } else {
         if (page === 1) {
           clearImages();
