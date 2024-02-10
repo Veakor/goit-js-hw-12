@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 
   async function searchImages(query, page) {
-      const url = `https://pixabay.com/api/?key=${apiKey}&q=${encodeURIComponent(query)}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=15`; // Додати параметри сторінки та кількості елементів на сторінці
+      const url = `https://pixabay.com/api/?key=${apiKey}&q=${encodeURIComponent(query)}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=15`; 
 
       try {
           const response = await axios.get(url);
@@ -113,4 +113,14 @@ document.addEventListener('DOMContentLoaded', function(){
           </div>
       `;
   }
+  function handleLoadMoreButtonVisibility() {
+    if (totalHits > currentPage * 15) { 
+        loadMoreButton.style.display = 'block';
+        endOfResultsMessage.style.display = 'none';
+    } else { 
+        loadMoreButton.style.display = 'none';
+        endOfResultsMessage.style.display = 'block';
+        endOfResultsMessage.innerText = "We're sorry, but you've reached the end of search results.";
+    }
+}
 });
