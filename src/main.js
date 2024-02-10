@@ -17,15 +17,13 @@ document.addEventListener('DOMContentLoaded', function(){
   let currentSearchTerm = '';
   let totalHits = 0;
 
-  if (!searchForm || !searchInput || !searchButton || !imageContainer || !loadingIndicator || !loadMoreButton) {
-      console.error('One or more elements not found.');
-      return;
-    }
+  
 
   searchForm.addEventListener('submit', async (event) => {
       event.preventDefault();
       currentSearchTerm = searchInput.value.trim();
       currentPage = 1; 
+      totalHits = 0;
       if (currentSearchTerm) {
         showLoadingIndicator();
         await searchImages(currentSearchTerm, currentPage);
@@ -52,9 +50,9 @@ document.addEventListener('DOMContentLoaded', function(){
       loadingIndicator.style.display = 'none';
     }
   }
-
+  
   async function searchImages(query, page) {
-    const perPage = 15;
+    const perPage = 40;
     const url = `https://pixabay.com/api/?key=${apiKey}&q=${encodeURIComponent(query)}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=${perPage}`;
 
     try {
@@ -68,7 +66,8 @@ document.addEventListener('DOMContentLoaded', function(){
           clearImages();
         }
         displayImages(data.hits);
-        loadMoreButton.style.display = totalHits > imageContainer.children.length ? 'block' : 'none'; 
+
+        loadMoreButton.style.display =currentPage * perPage < totalHits ? 'block' : 'none'; 
       } else {
         if (page === 1) {
           clearImages();
@@ -87,8 +86,6 @@ document.addEventListener('DOMContentLoaded', function(){
       loadMoreButton.id = 'loadMoreButton';
   loadMoreButton.textContent = 'Load more';
   loadMoreButton.style.display = 'none'; 
-  
- 
   loadMoreButton.addEventListener('click', async () => {
     currentPage++;
     showLoadingIndicator();
@@ -97,9 +94,7 @@ document.addEventListener('DOMContentLoaded', function(){
   
   
   imageContainer.insertAdjacentElement('afterend', loadMoreButton);
-
-      
-      smoothScrollToNextGroup();
+ smoothScrollToNextGroup();
     } catch(error) {
       iziToast.error({
         title: 'Error',
@@ -142,11 +137,8 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 
   function smoothScrollToNextGroup() {
-    
-    const cardHeight = document.querySelector('.image-card').getBoundingClientRect().height;
-
-  
-    window.scrollBy({
+     const cardHeight = document.querySelector('.image-card').getBoundingClientRect().height;
+window.scrollBy({
         top: cardHeight * 2,
         behavior: 'smooth'
     });
