@@ -12,10 +12,11 @@ document.addEventListener('DOMContentLoaded', function(){
   const loadingIndicator = document.getElementById('loadingIndicator');
   const loadMoreButton = document.getElementById('loadMoreButton');
   const searchForm = document.getElementById('searchForm'); 
+  const endOfResultsMessage = document.getElementById('endOfResultsMessage'); 
 
   let currentPage = 1;
   let currentSearchTerm = '';
-
+  let totalHits = 0; 
   
   
 
@@ -33,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function(){
               console.error('Error occurred during search:', error);
           } finally {
               hideLoadingIndicator();
-              loadMoreButton.style.display = 'block'; 
+              handleLoadMoreButtonVisibility(); 
           }
       } else {
           iziToast.error({
@@ -52,6 +53,7 @@ document.addEventListener('DOMContentLoaded', function(){
           console.error('Error occurred during search:', error);
       } finally {
           hideLoadingIndicator();
+          handleLoadMoreButtonVisibility();
       }
   });
 
@@ -73,7 +75,12 @@ document.addEventListener('DOMContentLoaded', function(){
           const data = response.data;
 
           if (data.hits && data.hits.length > 0) {
-              displayImages(data.hits);
+            totalHits = data.totalHits;
+            if (page === 1) {
+                clearImages(); 
+            }
+            displayImages(data.hits);
+
           } else {
               if (page === 1) { 
                   iziToast.info({
@@ -92,6 +99,7 @@ document.addEventListener('DOMContentLoaded', function(){
   const lightbox = new SimpleLightbox('.card-link');
   function displayImages(images) {
       const html = images.map(image => generateImageCard(image)).join('');
+      clearImages(); 
       imageContainer.innerHTML += html; 
       lightbox.refresh();
   }
@@ -113,6 +121,12 @@ document.addEventListener('DOMContentLoaded', function(){
           </div>
       `;
   }
+
+
+  function clearImages() {
+    imageContainer.innerHTML = '';
+}
+
   function handleLoadMoreButtonVisibility() {
     if (totalHits > currentPage * 15) { 
         loadMoreButton.style.display = 'block';
