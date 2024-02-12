@@ -4,7 +4,7 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import axios from 'axios';
 
-document.addEventListener('DOMContentLoaded', function(){
+document.addEventListener('DOMContentLoaded', async function(){
   const apiKey = '42207002-bb01baf83cbb3b924a651843b';
   const searchInput = document.getElementById('searchInput');
   const searchButton = document.getElementById('searchButton');
@@ -87,6 +87,7 @@ document.addEventListener('DOMContentLoaded', function(){
                       title: 'Info',
                       message: 'Sorry, there are no images matching your search query. Please try again.',
                   });
+                  clearImages();
               } else { 
                   loadMoreButton.style.display = 'none';
               }
@@ -103,6 +104,23 @@ document.addEventListener('DOMContentLoaded', function(){
       imageContainer.innerHTML += html; 
       lightbox.refresh();
   }
+
+  try {
+    await searchImages(currentSearchTerm, currentPage);
+    handleLoadMoreButtonVisibility(); 
+} catch (error) {
+    console.error('Error occurred during search:', error);
+} finally {
+    hideLoadingIndicator();
+}
+try {
+    await searchImages(currentSearchTerm, currentPage);
+} catch (error) {
+    console.error('Error occurred during search:', error);
+} finally {
+    hideLoadingIndicator();
+    handleLoadMoreButtonVisibility(); 
+}
 
   function generateImageCard(image) {
       return `
