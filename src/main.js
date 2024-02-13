@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', async function(){
   let currentSearchTerm = '';
   let totalHits = 0; 
   
+  
+
   searchForm.addEventListener('submit', async (event) => {
       event.preventDefault();
       const searchTerm = searchInput.value.trim();
@@ -99,9 +101,19 @@ document.addEventListener('DOMContentLoaded', async function(){
   function displayImages(images) {
       const html = images.map(image => generateImageCard(image)).join('');
       imageContainer.innerHTML += html; 
-      clearImages(); 
+      
       lightbox.refresh();
   }
+
+ 
+try {
+    await searchImages(currentSearchTerm, currentPage);
+} catch (error) {
+    console.error('Error occurred during search:', error);
+} finally {
+    hideLoadingIndicator();
+    handleLoadMoreButtonVisibility(); 
+}
 
   function generateImageCard(image) {
       return `
@@ -121,9 +133,10 @@ document.addEventListener('DOMContentLoaded', async function(){
       `;
   }
 
+
   function clearImages() {
     imageContainer.innerHTML = '';
-  }
+}
 
   function handleLoadMoreButtonVisibility() {
     if (totalHits > currentPage * 40) { 
@@ -134,5 +147,5 @@ document.addEventListener('DOMContentLoaded', async function(){
         endOfResultsMessage.style.display = 'block';
         endOfResultsMessage.innerText = "We're sorry, but you've reached the end of search results.";
     }
-  }
+}
 });
