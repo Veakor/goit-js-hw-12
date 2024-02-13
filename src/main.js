@@ -100,8 +100,8 @@ document.addEventListener('DOMContentLoaded', async function(){
   const lightbox = new SimpleLightbox('.card-link');
   function displayImages(images) {
       const html = images.map(image => generateImageCard(image)).join('');
-      clearImages(); 
       imageContainer.innerHTML += html; 
+      clearImages(); 
       lightbox.refresh();
   }
 
@@ -146,7 +146,7 @@ try {
 }
 
   function handleLoadMoreButtonVisibility() {
-    if (totalHits > currentPage * 15) { 
+    if (totalHits > currentPage * 40) { 
         loadMoreButton.style.display = 'block';
         endOfResultsMessage.style.display = 'none';
     } else { 
