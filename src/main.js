@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', async function(){
       lightbox.refresh();
   }
 
- 
+  (async function() {
 try {
     await searchImages(currentSearchTerm, currentPage);
 } catch (error) {
@@ -119,6 +119,7 @@ try {
     hideLoadingIndicator();
     handleLoadMoreButtonVisibility(); 
 }
+  })();
 
   function generateImageCard(image) {
       return `
