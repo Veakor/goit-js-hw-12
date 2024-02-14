@@ -4,8 +4,8 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import axios from 'axios';
 
-document.addEventListener('DOMContentLoaded', async function(){
-  const apiKey = '42207002-bb01baf83cbb3b924a651843b';
+
+  
   const searchInput = document.getElementById('searchInput');
   const searchButton = document.getElementById('searchButton');
   const imageContainer = document.getElementById('imageContainer');
@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', async function(){
   const searchForm = document.getElementById('searchForm'); 
   const endOfResultsMessage = document.getElementById('endOfResultsMessage'); 
 
+
+  document.addEventListener('DOMContentLoaded', async function(){
+  const apiKey = '42207002-bb01baf83cbb3b924a651843b';
   let currentPage = 1;
   let currentSearchTerm = '';
   let totalHits = 0; 
@@ -27,15 +30,15 @@ document.addEventListener('DOMContentLoaded', async function(){
       if (searchTerm) {
           currentSearchTerm = searchTerm; 
           currentPage = 1; 
-          clearImages();
           showLoadingIndicator();
           try {
               await searchImages(currentSearchTerm, currentPage);
+              handleLoadMoreButtonVisibility(); 
           } catch (error) {
-              console.error('Error occurred during search:', error);
+            console.error('Error occurred during search:', error);
           } finally {
               hideLoadingIndicator();
-              handleLoadMoreButtonVisibility(); 
+              
           }
       } else {
           iziToast.error({
@@ -49,24 +52,31 @@ document.addEventListener('DOMContentLoaded', async function(){
       currentPage++; 
       showLoadingIndicator();
       try {
-          await searchImages(currentSearchTerm, currentPage);
+        await searchImages(currentSearchTerm, currentPage);
+        handleLoadMoreButtonVisibility();
       } catch (error) {
           console.error('Error occurred during search:', error);
       } finally {
-          hideLoadingIndicator();
-          handleLoadMoreButtonVisibility();
+        hideLoadingIndicator();
+         
       }
   });
+
+  function displayImages(images) {
+    clearImages();
+    const html = images.map(image => generateImageCard(image)).join('');
+    imageContainer.innerHTML += html; 
+    lightbox.refresh();
+  }
 
   function showLoadingIndicator() {
       loadingIndicator.style.display = 'block';
   }
   
   function hideLoadingIndicator() {
-      if(loadingIndicator && loadingIndicator.style.display !== 'none'){
-          loadingIndicator.style.display = 'none';
+      loadingIndicator.style.display = 'none';
       }
-  }
+  
 
   async function searchImages(query, page) {
       const url = `https://pixabay.com/api/?key=${apiKey}&q=${encodeURIComponent(query)}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=15`; 
@@ -81,7 +91,7 @@ document.addEventListener('DOMContentLoaded', async function(){
                 clearImages(); 
             }
             displayImages(data.hits);
-
+            handleLoadMoreButtonVisibility();
           } else {
               if (page === 1) { 
                   iziToast.info({
@@ -102,24 +112,7 @@ document.addEventListener('DOMContentLoaded', async function(){
       }
   }
 
-  const lightbox = new SimpleLightbox('.card-link');
-  function displayImages(images) {
-      const html = images.map(image => generateImageCard(image)).join('');
-      imageContainer.insertAdjacentHTML('beforeend', html);
-      
-      lightbox.refresh();
-  }
-
-  (async function() {
-try {
-    await searchImages(currentSearchTerm, currentPage);
-} catch (error) {
-    console.error('Error occurred during search:', error);
-} finally {
-    hideLoadingIndicator();
-    handleLoadMoreButtonVisibility(); 
-}
-  })();
+ 
 
   function generateImageCard(image) {
       return `
@@ -147,11 +140,10 @@ try {
   function handleLoadMoreButtonVisibility() {
     if (totalHits > currentPage * 40) { 
         loadMoreButton.style.display = 'block';
-        endOfResultsMessage.style.display = 'none';
+        endOfResultsMessage.textContent = '';
     } else { 
         loadMoreButton.style.display = 'none';
-        endOfResultsMessage.style.display = 'block';
-        endOfResultsMessage.innerText = "We're sorry, but you've reached the end of search results.";
+        endOfResultsMessage.textContent = "We're sorry, but you've reached the end of search results.";
     }
 }
 });
