@@ -99,9 +99,8 @@ document.addEventListener('DOMContentLoaded', async function(){
 
   const lightbox = new SimpleLightbox('.card-link');
   function displayImages(images) {
-    clearImages();
       const html = images.map(image => generateImageCard(image)).join('');
-      imageContainer.innerHTML += html; 
+      imageContainer.insertAdjacentHTML('beforeend', html);
       
       lightbox.refresh();
   }
