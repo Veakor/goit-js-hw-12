@@ -108,7 +108,7 @@ import axios from 'axios';
             title: 'Error',
             message: 'An error occurred while fetching images. Please try again.',
         });
-          throw new Error('An error occurred while fetching images. Please try again.');
+         
       }
   }
 
@@ -138,6 +138,9 @@ import axios from 'axios';
 }
 
   function handleLoadMoreButtonVisibility() {
+    
+        console.log("totalHits:", totalHits);
+        console.log("currentPage:", currentPage);
     if (totalHits > currentPage * 40) { 
         loadMoreButton.style.display = 'block';
         endOfResultsMessage.textContent = '';
