@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', async function(){
       if (searchTerm) {
           currentSearchTerm = searchTerm; 
           currentPage = 1; 
+          clearImages();
           showLoadingIndicator();
           try {
               await searchImages(currentSearchTerm, currentPage);
