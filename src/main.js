@@ -94,6 +94,10 @@ document.addEventListener('DOMContentLoaded', async function(){
               }
           }
       } catch (error) {
+        iziToast.error({
+            title: 'Error',
+            message: 'An error occurred while fetching images. Please try again.',
+        });
           throw new Error('An error occurred while fetching images. Please try again.');
       }
   }
