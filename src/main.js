@@ -139,14 +139,23 @@ import axios from 'axios';
 
   function handleLoadMoreButtonVisibility() {
     
-        console.log("totalHits:", totalHits);
-        console.log("currentPage:", currentPage);
-    if (totalHits > currentPage * 40) { 
-        loadMoreButton.style.display = 'block';
-        endOfResultsMessage.textContent = '';
-    } else { 
+    if (totalHits === 0 || imageContainer.children.length === 0) {
+      
         loadMoreButton.style.display = 'none';
         endOfResultsMessage.textContent = "We're sorry, but you've reached the end of search results.";
+    } else {
+        const displayedImagesCount = currentPage * 40;
+        console.log("Total hits:", totalHits);
+        console.log("Displayed images count:", displayedImagesCount);
+
+        if (totalHits > displayedImagesCount) { 
+            loadMoreButton.style.display = 'block';
+            endOfResultsMessage.textContent = '';
+        } else { 
+            loadMoreButton.style.display = 'none';
+            endOfResultsMessage.textContent = "We're sorry, but you've reached the end of search results.";
+        }
     }
+
 }
 });
