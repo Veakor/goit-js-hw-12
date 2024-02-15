@@ -61,11 +61,12 @@ import axios from 'axios';
          
       }
   });
-
+  
   function displayImages(images) {
     clearImages();
     const html = images.map(image => generateImageCard(image)).join('');
     imageContainer.innerHTML += html; 
+    const lightbox = new SimpleLightbox('.card-link');
     lightbox.refresh();
   }
 
@@ -116,19 +117,19 @@ import axios from 'axios';
 
   function generateImageCard(image) {
       return `
-          <div class="image-card">
-              <a href="${image.largeImageURL}" class="card-link" data-lightbox="image">
-                  <img src="${image.webformatURL}" alt="${image.tags}" class="card-image">
-              </a>
-              <div class="card-details">
-                  <p class="card-text"><strong>Likes:</strong> ${image.likes}</p>
-                  <p class="card-text"><strong>Views:</strong> ${image.views}</p>
-              </div>
-              <div class="card-details">
-                  <p class="card-text"><strong>Comments:</strong> ${image.comments}</p>
-                  <p class="card-text"><strong>Downloads:</strong> ${image.downloads}</p>
-              </div>
-          </div>
+      <div class="image-card">
+      <a href="${image.largeImageURL}" class="card-link" data-lightbox="image">
+          <img src="${image.webformatURL}" alt="${image.tags}" class="card-image">
+      </a>
+      <div class="card-details">
+          <p class="card-text"><strong>Likes:</strong> ${image.likes}</p>
+          <p class="card-text"><strong>Views:</strong> ${image.views}</p>
+      </div>
+      <div class="card-details">
+          <p class="card-text"><strong>Comments:</strong> ${image.comments}</p>
+          <p class="card-text"><strong>Downloads:</strong> ${image.downloads}</p>
+      </div>
+  </div>
       `;
   }
 
